@@ -64,6 +64,15 @@ Then generate a Vagrantfile like this one
             cloudstack.api_key = "AAAAAAAAAAAAAAAA-aaaaaaaaaaa"
             cloudstack.secret_key = "SSSSSSSSSSSSSSSS-ssssssssss"
 
+            # Uncomment ONE of the following service offerings:
+            #cloudstack.service_offering_id = "71004023-bb72-4a97-b1e9-bc66dfce9470" # Micro - 512 MB
+            #cloudstack.service_offering_id = "b6cd1ff5-3a2f-4e9d-a4d1-8988c1191fe8" # Tiny - 1GB
+            #cloudstack.service_offering_id = "21624abb-764e-4def-81d7-9fc54b5957fb" # Small - 2GB
+            cloudstack.service_offering_id = "b6e9d1e8-89fc-4db3-aaa4-9b4c5b1d0844" # Medium - 4GB
+            #cloudstack.service_offering_id = "c6f99499-7f59-4138-9427-a09db13af2bc" # Large - 8GB
+            #cloudstack.service_offering_id = "350dc5ea-fe6d-42ba-b6c0-efb8b75617ad" # Extra-large - 16GB
+            #cloudstack.service_offering_id = "a216b0d1-370f-4e21-a0eb-3dfc6302b564" # Huge - 32GB
+
             cloudstack.security_group_ids = [ "fc4a3d81-b0c9-4e27-9bd8-5b04b51be100", "ee9e08b0-2a30-469e-af9b-d06a70184f9e" ] # List of on or more SG your machine will be tied to. Can be omitted, then the default SG will be used
             cloudstack.keypair = "vagrant" # for SSH boxes the name of the public key pushed to the machine
         end
@@ -75,5 +84,6 @@ Finally fire up the instance:
 
 ### Notes
 
+* Prior to launch a linux box, make sure the Security group allows for incoming SSH (TCP 22) trafic from your IP address
 * Windows boxes require to WinRM enabled in order to be bootstraped correctly by vagrant.
 

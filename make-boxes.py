@@ -6,7 +6,7 @@ import requester
 import config
 
 def listtemplates():
-    response, error = requester.make_request('listTemplates',{"templatefilter": 'featured'},None,config.host,config.port,config.apikey,config.secretkey,config.protocol,config.path)
+    response, error = requester.make_request('listTemplates',{"templatefilter": 'executable'},None,config.host,config.port,config.apikey,config.secretkey,config.protocol,config.path)
     resp=json.loads(str(response))
     return resp['listtemplatesresponse']
 

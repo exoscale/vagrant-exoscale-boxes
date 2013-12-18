@@ -84,6 +84,6 @@ Finally fire up the instance:
 
 ### Notes
 
-* Prior to launch a linux box, make sure the Security group allows for incoming SSH (TCP 22) trafic from your IP address
-* Windows boxes require to WinRM enabled in order to be bootstraped correctly by vagrant.
+* Prior to launch a linux box, make sure the Security group allows for incoming SSH (TCP 22) trafic from your IP address.
+* Windows boxes require to WinRM enabled in order to be bootstraped correctly by vagrant, choose a WinRM enabled box and allow incoming TCP trafic on port 5985 (WinRM).
 

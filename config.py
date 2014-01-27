@@ -4,8 +4,8 @@
 #
 
 # Account access for Open Cloud to display usefull information
-apikey='OS1iyoz9RmwH0zh-ALDl6choAlThj418Zt4EnNR_3Oa_QvkuoakajausOKq-8bHSqqv7XHj4q9BwUe5nUJWUTA'
-secretkey='rItSRXnoEZwvYk1m0cE7GScZBzQMMG2OMpHKxxKyJBWg0PZvCGiL6lVbktJicczi-gYBSPlaSg2ZNKmDKx_A-Q'
+apikey='C7ZtjijheFjq2rnkTms6AIqQLTNfV5wZjDje04PfyCnw6V89cD0cf6GPiOsXiw5latrqxbBQU-piVRMZRiczsw'
+secretkey='W8EB5w5kw_KF8RM0U0XQKCTD-ZdWkzEiv3aNAAip09Jv7WVNRe6jdWoDelzKT7DcGc3GFSNP04SrgSFN7sxeLg'
 path='/compute'
 host='api.exoscale.ch'
 port='443'

@@ -1,13 +1,15 @@
 import tarfile
 import json
 import re
-from cStringIO import StringIO
+import io 
 import requester
 import config
 
 def listtemplates():
-    response, error = requester.make_request('listTemplates',{"templatefilter": 'executable'},None,config.host,config.port,config.apikey,config.secretkey,config.protocol,config.path)
-    resp=json.loads(str(response))
+    response, error = requester.make_request('listTemplates',{"templatefilter": 'executable', "listall": 'true'},None,config.host,config.port,config.apikey,config.secretkey,config.protocol,config.path)
+    print(error)
+    print(response)
+    resp=json.loads(response.decode())
     return resp['listtemplatesresponse']
 
 metadata = """{
@@ -38,12 +40,12 @@ for t in templates['template']:
     out = tarfile.open(templateName, mode='w:gz')
     try:
         info = tarfile.TarInfo('metadata.json')
-        info.size = len(metadata)
-        out.addfile(info, StringIO(metadata))
+        info.size = len(metadata.encode('utf-8'))
+        out.addfile(info, io.BytesIO(metadata.encode('utf-8')))
         info = tarfile.TarInfo('Vagrantfile')
-        info.size = len(vagrantfile.format(config.host, config.path, config.port, config.protocol,t['id'],config.network, config.zone))
-        out.addfile(info, StringIO(vagrantfile.format(config.host, config.path, config.port, config.protocol,t['id'],config.network, config.zone)))
+        info.size = len(vagrantfile.format(config.host, config.path, config.port, config.protocol,t['id'],config.network, config.zone).encode('utf-8'))
+        out.addfile(info, io.BytesIO(vagrantfile.format(config.host, config.path, config.port, config.protocol,t['id'],config.network, config.zone).encode('utf-8')))
     finally:
         out.close()
-        print templateName + " generated OK"
+        print(templateName + " generated OK")
 

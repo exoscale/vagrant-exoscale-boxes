@@ -1,15 +1,30 @@
-#
+#!/usr/bin/python
+
+import os
+
+
 # exoscale make Vagrant Boxes
 # configuration file options
-#
+
 
 # Account access for Open Cloud to display usefull information
-apikey='Kbu3sBLHhG67nhUo5VEdM9uS0Iw9803DiRzskRbjrZJMCT_SdEBIwI0YesoXvTyOMUTwqdKZKQDl_UosAlCUTg'
-secretkey='l3a3NnCMpWuO7SHrHUVqANDc2169XEeedo6-qWKhLY6zwCaSCIqjI0Mhc2n19A_N2qwx20oW6nKwkngbNnhh3g'
+try:
+    apikey = os.environ["APIKEY"]
+except:
+    print("Error missing APIKEY env variable, exiting")
+    exit(1)
+try:
+    secretkey = os.environ["SECRETKEY"]
+except:
+    print("Error missing SECRETKEY env variable, exiting")
+    exit(1)
+
+
 path='/compute'
 host='api.exoscale.ch'
 port='443'
 protocol='https'
+
 
 # Parameters that will be put in the boxes
 network='00304a04-c7ea-4e77-a786-18bc64347bf7' #default Internet network

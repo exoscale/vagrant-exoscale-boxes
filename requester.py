@@ -21,7 +21,7 @@ try:
     import base64
     import hashlib
     import hmac
-    import httplib
+    import http.client
     import json
     import os
     import pdb
@@ -30,12 +30,13 @@ try:
     import sys
     import time
     import types
-    import urllib
-    import urllib2
-    from urllib2 import urlopen, HTTPError, URLError
+    import urllib.request, urllib.parse, urllib.error
+    import urllib.request, urllib.error, urllib.parse
+    from urllib.request import urlopen
+    from urllib.error import HTTPError, URLError
 
-except ImportError, e:
-    print "Import error in %s : %s" % (__name__, e)
+except ImportError as e:
+    print("Import error in %s : %s" % (__name__, e))
     import sys
     sys.exit()
 
@@ -60,27 +61,28 @@ def make_request(command, args, logger, host, port,
     args["command"] = command
     args["apiKey"] = apikey
     args["response"] = "json"
-    request = zip(args.keys(), args.values())
+    request = list(zip(list(args.keys()), list(args.values())))
     request.sort(key=lambda x: x[0].lower())
 
-    request_url = "&".join(["=".join([r[0], urllib.quote_plus(str(r[1]))])
+    request_url = "&".join(["=".join([r[0], urllib.parse.quote_plus(str(r[1]))])
                            for r in request])
     hashStr = "&".join(["=".join([r[0].lower(),
-                       str.lower(urllib.quote_plus(str(r[1]))).replace("+",
+                       str.lower(urllib.parse.quote_plus(str(r[1]))).replace("+",
                        "%20")]) for r in request])
 
-    sig = urllib.quote_plus(base64.encodestring(hmac.new(secretkey, hashStr,
+    sig = urllib.parse.quote_plus(base64.encodestring(hmac.new(secretkey.encode('utf-8'), hashStr.encode('utf-8'),
                             hashlib.sha1).digest()).strip())
     request_url += "&signature=%s" % sig
     request_url = "%s://%s:%s%s?%s" % (protocol, host, port, path, request_url)
+    print(request_url)
 
     try:
         logger_debug(logger, "Request sent: %s" % request_url)
-        connection = urllib2.urlopen(request_url)
+        connection = urllib.request.urlopen(request_url)
         response = connection.read()
-    except HTTPError, e:
-        error = "%s: %s" % (e.msg, e.info().getheader('X-Description'))
-    except URLError, e:
+    except HTTPError as e:
+        error = "%s: %s" % (e.msg, e.info())
+    except URLError as e:
         error = e.reason
 
     logger_debug(logger, "Response received: %s" % response)
@@ -107,7 +109,7 @@ def monkeyrequest(command, args, isasync, asyncblock, logger, host, port,
     def process_json(response):
         try:
             response = json.loads(str(response))
-        except ValueError, e:
+        except ValueError as e:
             error = "Error processing json response, %s" % e
             logger_debug(logger, "Error processing json: %s" % e)
 
@@ -118,7 +120,7 @@ def monkeyrequest(command, args, isasync, asyncblock, logger, host, port,
         return response, error
 
     isasync = isasync and (asyncblock == "true")
-    responsekey = filter(lambda x: 'response' in x, response.keys())[0]
+    responsekey = filter(lambda x: 'response' in x, list(response.keys()))[0]
 
     if isasync and 'jobid' in response[responsekey]:
         jobid = response[responsekey]['jobid']
@@ -128,7 +130,7 @@ def monkeyrequest(command, args, isasync, asyncblock, logger, host, port,
         pollperiod = 2
         progress = 1
         while timeout > 0:
-            print '\r' + '.' * progress,
+            print('\r' + '.' * progress, end=' ')
             sys.stdout.flush()
             time.sleep(pollperiod)
             timeout = timeout - pollperiod
@@ -141,7 +143,7 @@ def monkeyrequest(command, args, isasync, asyncblock, logger, host, port,
                 return response, error
 
             response = process_json(response)
-            responsekeys = filter(lambda x: 'response' in x, response.keys())
+            responsekeys = [x for x in list(response.keys()) if 'response' in x]
 
             if len(responsekeys) < 1:
                 continue
@@ -154,7 +156,7 @@ def monkeyrequest(command, args, isasync, asyncblock, logger, host, port,
                         jobresult["errorcode"], jobresult["errortext"])
                 return response, error
             elif jobstatus == 1:
-                print "\r" + " " * progress,
+                print("\r" + " " * progress, end=' ')
                 return response, error
             else:
                 logger_debug(logger, "We should not arrive here!")

@@ -7,7 +7,7 @@ To run the script, first check your configuration in config.py
 
 Then execute
 
-    python make-boxes.py
+    python3 make-boxes.py
 
 You should get an output like:
 
